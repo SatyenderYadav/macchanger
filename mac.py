@@ -5,8 +5,6 @@ import sys
 
 
 yourpassword=''
-
-
 def rengen():
 	a='ABCDEF1234567890'
 	mc=''
@@ -16,14 +14,41 @@ def rengen():
 
 
 mac=None
+wifi=False
+ether=False
+al=True
+
 try:
-	if sys.argv[1] is not None:
-		mac=sys.argv[1]
+	for i in sys.argv:
+		if i=='-m':
+			mac=sys.argv[sys.argv.index(i)+1]
+		if i=='-w':
+			wifi=True
+			al=False
+		if i=='-e':
+			ether=True
+			al=False
+
 except Exception as e:
 	pass
 
 if mac is None:
 	mac=rengen()
 
-os.system('echo \''+yourpassword+'\' | sudo -S ip link set dev wlp1s0 down; echo \''+yourpassword+'\' | sudo -S ip link set dev wlp1s0 address '+mac+'; echo \''+yourpassword+'\' | sudo -S ip link set dev wlp1s0 up')
-print("Mac address set to "+mac)
+s=os.popen('ifconfig').read()
+s=s.split('\n\n')
+name=[]
+if ether or al:
+	ethname=s[0].split(':')[0]
+	name.append(ethname)
+if wifi or al:
+	wifiname=s[2].split(':')[0]
+	name.append(wifiname)
+#print(name)
+for i in name:
+	cmd='echo \''+yourpassword+'\' | sudo -S ip link set dev '+i+' down; echo \''+yourpassword+'\' | sudo -S ip link set dev '+i+' address '+mac+'; echo \''+yourpassword+'\' | sudo -S ip link set dev '+i+' up'
+	#print(cmd)
+	res=os.popen(cmd).read()
+	if res=='':
+		print("Mac address of "+i+" set to "+mac)
+	mac=rengen()
