@@ -20,8 +20,13 @@ A simple and easy script to change your MAC address in Linux.
 
 1. To set MAC Address randomly, simply rum mac
 
-          mac
+          mac -w
+          mac -e
+          mac                       #To change all MAC addresses
          
 2. To set specified MAC address, run
 
-          mac 00:00:00:00:00:00           # your specific MAC address
+          mac -w -m 00:00:00:00:00:00           # your specific MAC address
+          mac -e -m 00:00:00:00:00:00
+          
+          # -w is for wifi and -e is for ethernet
