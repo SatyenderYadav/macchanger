@@ -1,0 +1,24 @@
+#!/usr/bin/python3
+import os
+import sys
+
+
+mac=None
+interface='wlan0'
+
+
+try:
+        for i in sys.argv:
+                if i=='-m':
+                        mac=sys.argv[sys.argv.index(i)+1]
+                if i=='-i':
+                        interface=sys.argv[sys.argv.index(i)+1]
+
+except Exception as e:
+        pass
+
+
+if mac!=None:
+        os.popen('sudo ifconfig '+interface+' down; sudo systemctl stop network-manager.service; sudo macchanger -m '+mac+' '+interface+'; sudo systemctl start network-manager.service;')
+else:
+        os.popen('sudo ifconfig '+interface+' down; sudo systemctl stop network-manager.service; sudo macchanger -r '+interface+'; sudo systemctl start network-manager.service;')
